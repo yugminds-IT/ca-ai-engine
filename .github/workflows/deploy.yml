@@ -7,7 +7,7 @@ on:
     branches: [server]
 
 env:
-  IMAGE: ghcr.io/yugminds-it/ca-automation-ai-engine
+  IMAGE: ghcr.io/yugminds-it/ca-ai-engine
 
 jobs:
   test:
