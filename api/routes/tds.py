@@ -34,6 +34,7 @@ from features.tds.processors.form_26q import Form26QProcessor
 from features.tds.validators.tds_validator import TDSValidator
 from features.tds.schemas.challan import ChallanData
 from features.tds.schemas.deductee import DeducteeRecord
+from config.safe_paths import output_file
 from workers.tasks.tds.generation_tasks import (
     generate_csi_file,
     generate_24q_fvu,
@@ -499,7 +500,7 @@ async def generate_csi_sync(payload: dict):
         challan = ChallanData(**flat)
         content = CSIGenerator().generate_from_challan(challan, status=status)
 
-        output_path = Path(settings.output_dir) / filename
+        output_path = output_file(filename)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(content, encoding="utf-8")
 
@@ -578,7 +579,7 @@ async def generate_fvu_sync(payload: dict):
             return_data = Form26QProcessor().build(challan, deductees, deductor_meta)
             content = generator.generate_26q(return_data)
 
-        output_path = Path(settings.output_dir) / filename
+        output_path = output_file(filename)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(content, encoding="utf-8")
 
@@ -629,7 +630,7 @@ async def download_file(task_id: str):
 
 @router.get("/download/file/{filename}", summary="Download a generated file by filename")
 async def download_file_by_name(filename: str):
-    file_path = Path(settings.output_dir) / filename
+    file_path = output_file(filename)
     if not file_path.exists():
         raise HTTPException(404, f"File {filename!r} not found")
     return FileResponse(
