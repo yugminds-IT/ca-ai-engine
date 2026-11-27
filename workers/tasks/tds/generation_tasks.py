@@ -19,6 +19,7 @@ from features.tds.generators.fvu_generator import CSIGenerator as FVUGenerator
 from features.tds.schemas.challan import ChallanData
 from features.tds.schemas.deductee import DeducteeRecord
 from config.settings import get_settings
+from config.safe_paths import output_file
 
 settings = get_settings()
 
@@ -46,7 +47,7 @@ def generate_csi_file(
         generator = CSIGenerator()
         content = generator.generate_from_challan(challan, status=status)
 
-        output_path = Path(settings.output_dir) / output_filename
+        output_path = output_file(output_filename)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(content, encoding="utf-8")
 
@@ -86,7 +87,7 @@ def generate_24q_fvu(
         generator = FVUGenerator()
         content = generator.generate_24q(return_data)
 
-        output_path = Path(settings.output_dir) / output_filename
+        output_path = output_file(output_filename)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(content, encoding="utf-8")
 
@@ -122,7 +123,7 @@ def generate_26q_fvu(
         generator = FVUGenerator()
         content = generator.generate_26q(return_data)
 
-        output_path = Path(settings.output_dir) / output_filename
+        output_path = output_file(output_filename)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(content, encoding="utf-8")
 

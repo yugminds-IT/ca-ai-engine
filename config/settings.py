@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     output_dir: str = "/tmp/caa-ai/outputs"
     max_file_size: int = 10 * 1024 * 1024  # 10 MB
 
+    # Shared secret the backend sends in X-API-Key. Every route but /health refuses requests without it.
+    api_key: str = ""
+
     # HuggingFace model path/ID for SmolVLM (override to use a local cache)
     vlm_model_path: str = "HuggingFaceTB/SmolVLM-256M-Instruct"
 
